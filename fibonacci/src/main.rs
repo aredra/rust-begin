@@ -22,7 +22,9 @@ fn fibonacci(num: u32) -> u32{
     // }
 
     // return b;
-
+    if num == 0 {
+        return 0;
+    }
     if num < 3 {
         return 1;
     }
@@ -31,21 +33,29 @@ fn fibonacci(num: u32) -> u32{
 }
 
 fn main() {
-    println!("Please input number of Fibonacci");
+    println!("Input \"exit\" to quit");
 
+    'main_loop: loop {
+        println!("Please input number of Fibonacci");
 
-    let num = loop {
-        let num = prompt("> ");
-        let num: u32 = match num.trim().parse() {
-            Ok(num) => num,
-            Err(_) => {
-                println!("Please input number!");
-                continue;
+        let num = loop {
+            let num = prompt("> ");
+
+            if num == "exit" {
+                break 'main_loop;
             }
+
+            let num: u32 = match num.trim().parse() {
+                Ok(num) => num,
+                Err(_) => {
+                    println!("Please input number!");
+                    continue;
+                }
+            };
+
+            break num;
         };
 
-        break num;
+        println!("Result: {:?}", fibonacci(num));
     };
-
-    println!("Result: {:?}", fibonacci(num));
 }
