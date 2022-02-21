@@ -1,2 +1,3 @@
-fn connect() {
+pub fn connect() {
+  println!("Client connecting...");
 }
