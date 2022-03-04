@@ -27,6 +27,7 @@ fn main() {
 
     mode(&temp_integers);
     pig_latin();
+    company_text_editor();
 }
 
 fn max(temp_vec: &Vec<i32>) -> Option<i32> {
@@ -106,6 +107,11 @@ fn pig_latin() {
     println!("Enter a word for Pig-Latin(only English): ");
     let mut input_text = String::new();
     std::io::stdin().read_line(&mut input_text).expect("Failed to read line");
+    
+    if input_text.trim().is_empty() {
+        println!("Input is empty");
+        return;
+    }
 
     let mut result = String::new();
     let input_text_length = input_text.len();
@@ -122,4 +128,53 @@ fn pig_latin() {
     }
 
     println!("Pig Latin: {}", result);
+}
+
+fn company_text_editor() {
+    println!(">>>>>>>>> Company data text editor is running!!!!");
+    println!(">>>>>>>>> Use 'Add {{employee_name}} to {{department_name}}' to insert");
+    println!(">>>>>>>>> Use 'Remove {{employee_name}} to {{department_name}}' to delete");
+    println!(">>>>>>>>> Use 'Show {{department_name}}' to select specific department");
+    println!(">>>>>>>>> Use 'Show All' to select all");
+    println!(">>>>>>>>> Use 'Exit' to quit this program");
+    
+    let mut company_db: HashMap<String, Vec<String>> = HashMap::new();
+
+    loop {
+        let mut command = String::new();
+
+        println!("Enter your command: ");
+        std::io::stdin().read_line(&mut command).expect("Failed to read line");
+        if command.trim() == "Exit" {
+            break;
+        }
+        if command.trim() == "Show All" {
+            println!("{:?}", company_db);
+        } else {
+            let command_split: Vec<&str> = command.split(" ").collect();
+            let command_type = command_split[0];
+
+            if command_type == "Add" {
+                let command_name = command_split[1];
+                let command_department = command_split[3].trim();
+                let mut employees = company_db.entry(command_department.to_string()).or_insert(Vec::new());
+                employees.push(command_name.to_string());
+            } else if command_type == "Remove" {
+                let command_name = command_split[1];
+                let command_department = command_split[3].trim();
+                let mut employees = company_db.entry(command_department.to_string()).or_insert(Vec::new());
+                employees.retain(|x| x != command_name);
+            } else if command_type == "Show" {
+                let command_department = command_split[1].trim();
+                let employees = company_db.get(command_department);
+                if employees.is_some() {
+                    println!("{:?}", employees.unwrap());
+                } else {
+                    println!("No employees in this department");
+                }
+            } else {
+                println!("Invalid command");
+            }
+        }
+    }
 }
