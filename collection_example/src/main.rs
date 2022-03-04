@@ -26,6 +26,7 @@ fn main() {
     });
 
     mode(&temp_integers);
+    pig_latin();
 }
 
 fn max(temp_vec: &Vec<i32>) -> Option<i32> {
@@ -98,4 +99,27 @@ fn mode(temp_vec: &Vec<i32>) {
     }
 
     println!("Mode: {:?}", map.iter().filter(|&(_, v)| v == &max_count).map(|(k, _)| k).collect::<Vec<&i32>>());
+}
+
+fn pig_latin() {
+    const VOWELS: &str = "aeiou";
+    println!("Enter a word for Pig-Latin(only English): ");
+    let mut input_text = String::new();
+    std::io::stdin().read_line(&mut input_text).expect("Failed to read line");
+
+    let mut result = String::new();
+    let input_text_length = input_text.len();
+    let start_char = &input_text[0..1];
+
+    if VOWELS.contains(start_char) {
+        result.push_str(&input_text[..input_text_length-1]);
+        result.push_str("-hay");
+    } else {
+        result.push_str(&input_text[1..input_text_length-1]);
+        result.push_str("-");
+        result.push_str(start_char);
+        result.push_str("ay");
+    }
+
+    println!("Pig Latin: {}", result);
 }
