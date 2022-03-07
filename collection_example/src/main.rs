@@ -2,13 +2,12 @@ use std::collections::HashMap;
 
 fn main() {
 
-    let temp_integers = vec![1,2,3,4,5,5,6,7,8,9,10];
+    let temp_integers = vec![1,2,3,4,5,5,6,6,7,8,9,10];
 
     println!("Max: {}", match max(&temp_integers) {
         Some(max) => max.to_string(),
         None => "Vector is empty".to_string(),
     });
-
 
     println!("Min: {}", match min(&temp_integers) {
         Some(min) => min.to_string(),
@@ -99,7 +98,10 @@ fn mode(temp_vec: &Vec<i32>) {
         }
     }
 
-    println!("Mode: {:?}", map.iter().filter(|&(_, v)| v == &max_count).map(|(k, _)| k).collect::<Vec<&i32>>());
+    let mut result = map.iter().filter(|&(_, v)| v == &max_count).map(|(k, _)| k).collect::<Vec<&i32>>();
+    result.sort();
+
+    println!("Mode: {:?}", result);
 }
 
 fn pig_latin() {
@@ -117,26 +119,14 @@ fn pig_latin() {
     let input_text_length = input_text.len();
     let start_char = &input_text[0..1];
 
-    if VOWELS.contains(start_char) {
-        result.push_str(&input_text[..input_text_length-1]);
-        result.push_str("-hay");
-    } else {
-        result.push_str(&input_text[1..input_text_length-1]);
-        result.push_str("-");
-        result.push_str(start_char);
-        result.push_str("ay");
-    }
+    result = if VOWELS.contains(start_char) { format!("{}-hay", input_text.trim()) } 
+        else { format!("{}-{}ay", &input_text[1..].trim(), start_char) };
 
     println!("Pig Latin: {}", result);
 }
 
 fn company_text_editor() {
-    println!(">>>>>>>>> Company data text editor is running!!!!");
-    println!(">>>>>>>>> Use 'Add {{employee_name}} to {{department_name}}' to insert");
-    println!(">>>>>>>>> Use 'Remove {{employee_name}} to {{department_name}}' to delete");
-    println!(">>>>>>>>> Use 'Show {{department_name}}' to select specific department");
-    println!(">>>>>>>>> Use 'Show All' to select all");
-    println!(">>>>>>>>> Use 'Exit' to quit this program");
+    print_manual();
     
     let mut company_db: HashMap<String, Vec<String>> = HashMap::new();
 
@@ -148,7 +138,7 @@ fn company_text_editor() {
         if command.trim() == "Exit" {
             break;
         }
-        if command.trim() == "Show All" {
+        if command.trim() == "Show all" {
             println!("{:?}", company_db);
         } else {
             let command_split: Vec<&str> = command.split(" ").collect();
@@ -177,4 +167,13 @@ fn company_text_editor() {
             }
         }
     }
+}
+
+fn print_manual() {
+    println!(">>>>>>>>> Company data text editor is running!!!!");
+    println!(">>>>>>>>> Use 'Add {{employee_name}} to {{department_name}}' to insert");
+    println!(">>>>>>>>> Use 'Remove {{employee_name}} to {{department_name}}' to delete");
+    println!(">>>>>>>>> Use 'Show {{department_name}}' to select specific department");
+    println!(">>>>>>>>> Use 'Show all' to select all");
+    println!(">>>>>>>>> Use 'Exit' to quit this program");
 }
